@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="VoceTube — plataforma de vídeos">
+  <title>VoceTube</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%2338BDF8'/%3E%3Cpath d='M12 9v14l11-7z' fill='%2306121C'/%3E%3C/svg%3E">
+
+  <!-- Aplica o tema salvo antes de desenhar a página (evita "piscar" claro/escuro) -->
+  <script>
+    try {
+      const t = JSON.parse(localStorage.getItem('vocetube:v1') || '{}').theme;
+      if (t) document.documentElement.dataset.theme = t;
+    } catch (e) {}
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#app">Pular para o conteúdo</a>
+
+  <!-- ===== Topo ===== -->
+  <header class="topbar">
+    <div class="topbar__left">
+      <button class="icon-btn" id="menuBtn" aria-label="Menu" aria-controls="sidebar" aria-expanded="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <a href="#/" class="logo" aria-label="VoceTube, página inicial">
+        <span class="logo__mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg>
+        </span>
+        <span class="logo__text">Voce<span>Tube</span></span>
+      </a>
+    </div>
+
+    <form class="search" id="searchForm" role="search">
+      <div class="search__box">
+        <label class="sr-only" for="searchInput">Pesquisar vídeos, canais e categorias</label>
+        <input id="searchInput" type="search" placeholder="Pesquisar" autocomplete="off" enterkeyhint="search">
+        <button type="submit" class="search__btn" aria-label="Pesquisar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </button>
+      </div>
+      <button type="button" class="icon-btn icon-btn--filled" id="voiceBtn" aria-label="Pesquisar por voz">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+      </button>
+    </form>
+
+    <div class="topbar__right">
+      <button class="pill-btn" data-open="upload">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Enviar</span>
+      </button>
+
+      <div class="popover-wrap">
+        <button class="icon-btn" id="notifBtn" aria-label="Notificações" aria-haspopup="true" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <span class="badge" id="notifBadge" hidden></span>
+        </button>
+        <div class="popover popover--notif" id="notifPanel" hidden>
+          <div class="popover__head"><strong>Notificações</strong></div>
+          <div id="notifList"></div>
+        </div>
+      </div>
+
+      <div class="popover-wrap">
+        <button class="avatar avatar--me avatar-btn" id="accountBtn" aria-label="Sua conta" aria-haspopup="true" aria-expanded="false">M</button>
+        <div class="popover popover--account" id="accountPanel" hidden>
+          <div class="account-head">
+            <span class="avatar avatar--me avatar--lg" aria-hidden="true">M</span>
+            <div><strong>Meu canal</strong><span class="muted small">@meucanal</span></div>
+          </div>
+          <a href="#/c/me" class="menu-item">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Seu canal
+          </a>
+          <button class="menu-item" data-open="upload">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg>Enviar vídeo
+          </button>
+          <button class="menu-item" id="themeBtn">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><span id="themeLabel">Aparência: escuro</span>
+          </button>
+          <button class="menu-item" data-open="shortcuts">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg>Atalhos de teclado
+          </button>
+          <hr>
+          <button class="menu-item menu-item--danger" id="resetBtn">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>Apagar meus dados
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- ===== Menu lateral ===== -->
+    <nav class="sidebar" id="sidebar" aria-label="Navegação principal">
+      <a href="#/" class="nav-item" data-route="home">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg><span>Início</span>
+      </a>
+      <a href="#/alta" class="nav-item" data-route="alta">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3s5 4.5 5 10a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5 0 2 1 3 2 3 0-3-1-5 1-8.5z"/></svg><span>Em alta</span>
+      </a>
+      <a href="#/seguindo" class="nav-item" data-route="seguindo">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M7 4h10M10 11v5l4-2.5z"/></svg><span>Seguindo</span>
+      </a>
+      <hr>
+      <span class="nav-title">Você</span>
+      <a href="#/c/me" class="nav-item" data-route="me">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Seu canal</span>
+      </a>
+      <a href="#/historico" class="nav-item" data-route="historico">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg><span>Histórico</span>
+      </a>
+      <a href="#/depois" class="nav-item" data-route="depois">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Ver depois</span>
+      </a>
+      <a href="#/curtidos" class="nav-item" data-route="curtidos">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v11H4V10zM7 10l4-7a2 2 0 0 1 3 2l-1 5h6a2 2 0 0 1 2 2.3l-1.3 7a2 2 0 0 1-2 1.7H7"/></svg><span>Curtidos</span>
+      </a>
+      <hr>
+      <span class="nav-title">Seguindo</span>
+      <div id="channelList"></div>
+      <hr>
+      <p class="sidebar__foot">VoceTube · protótipo de plataforma de vídeos</p>
+    </nav>
+
+    <!-- ===== Conteúdo (cada página é desenhada pelo JavaScript) ===== -->
+    <main id="app" tabindex="-1"></main>
+  </div>
+
+  <!-- ===== Barra inferior (celular) ===== -->
+  <nav class="bottom-nav" aria-label="Navegação rápida">
+    <a href="#/" data-route="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Início</a>
+    <a href="#/alta" data-route="alta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3s5 4.5 5 10a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5 0 2 1 3 2 3 0-3-1-5 1-8.5z"/></svg>Em alta</a>
+    <button data-open="upload" class="bottom-nav__add" aria-label="Enviar vídeo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+    <a href="#/seguindo" data-route="seguindo"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M7 4h10M10 11v5l4-2.5z"/></svg>Seguindo</a>
+    <a href="#/historico" data-route="historico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg>Você</a>
+  </nav>
+
+  <!-- ===== Janela: enviar vídeo ===== -->
+  <dialog class="modal" id="uploadDialog" aria-labelledby="uploadTitle">
+    <form method="dialog" class="modal__box" id="uploadForm">
+      <div class="modal__head">
+        <h2 id="uploadTitle">Enviar vídeo</h2>
+        <button type="button" class="icon-btn" data-close aria-label="Fechar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+
+      <label class="dropzone" id="dropzone">
+        <input type="file" id="fileInput" accept="video/*" class="sr-only">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg>
+        <strong id="dropText">Escolha um vídeo do seu computador</strong>
+        <span class="muted small">ou arraste o arquivo para cá · MP4, WebM ou MOV</span>
+      </label>
+
+      <div class="upload-preview" id="uploadPreview" hidden>
+        <img id="uploadThumb" alt="Miniatura gerada do vídeo">
+        <div><strong id="uploadFileName"></strong><span class="muted small" id="uploadFileInfo"></span></div>
+      </div>
+
+      <div class="field">
+        <label for="upTitle">Título <span class="muted">(obrigatório)</span></label>
+        <input id="upTitle" maxlength="100" required placeholder="Dê um título ao seu vídeo">
+        <span class="field__count"><span id="upTitleCount">0</span>/100</span>
+      </div>
+      <div class="field">
+        <label for="upDesc">Descrição</label>
+        <textarea id="upDesc" rows="3" maxlength="1000" placeholder="Conte do que se trata o vídeo"></textarea>
+      </div>
+      <div class="field">
+        <label for="upCat">Categoria</label>
+        <select id="upCat"></select>
+      </div>
+      <p class="form-error" id="uploadError" role="alert" hidden></p>
+
+      <div class="modal__foot">
+        <button type="button" class="pill-btn" data-close>Cancelar</button>
+        <button type="submit" class="pill-btn pill-btn--accent" id="uploadSubmit" value="send">Publicar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ===== Janela: compartilhar ===== -->
+  <dialog class="modal" id="shareDialog" aria-labelledby="shareTitle">
+    <div class="modal__box">
+      <div class="modal__head">
+        <h2 id="shareTitle">Compartilhar</h2>
+        <button type="button" class="icon-btn" data-close aria-label="Fechar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <div class="share-row">
+        <label class="sr-only" for="shareLink">Link do vídeo</label>
+        <input id="shareLink" readonly>
+        <button type="button" class="pill-btn pill-btn--accent" id="copyLinkBtn">Copiar</button>
+      </div>
+      <label class="check">
+        <input type="checkbox" id="shareAtTime"> Começar em <span id="shareTime">0:00</span>
+      </label>
+    </div>
+  </dialog>
+
+  <!-- ===== Janela: atalhos ===== -->
+  <dialog class="modal" id="shortcutsDialog" aria-labelledby="shortcutsTitle">
+    <div class="modal__box">
+      <div class="modal__head">
+        <h2 id="shortcutsTitle">Atalhos de teclado</h2>
+        <button type="button" class="icon-btn" data-close aria-label="Fechar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <dl class="shortcuts">
+        <dt><kbd>K</kbd> ou <kbd>Espaço</kbd></dt><dd>Reproduzir / pausar</dd>
+        <dt><kbd>J</kbd> / <kbd>L</kbd></dt><dd>Voltar / avançar 10 segundos</dd>
+        <dt><kbd>←</kbd> / <kbd>→</kbd></dt><dd>Voltar / avançar 5 segundos</dd>
+        <dt><kbd>↑</kbd> / <kbd>↓</kbd></dt><dd>Aumentar / diminuir volume</dd>
+        <dt><kbd>M</kbd></dt><dd>Silenciar</dd>
+        <dt><kbd>F</kbd></dt><dd>Tela cheia</dd>
+        <dt><kbd>T</kbd></dt><dd>Modo cinema</dd>
+        <dt><kbd>Shift</kbd> + <kbd>N</kbd></dt><dd>Próximo vídeo</dd>
+        <dt><kbd>0</kbd> a <kbd>9</kbd></dt><dd>Pular para 0% a 90% do vídeo</dd>
+        <dt><kbd>/</kbd></dt><dd>Ir para a busca</dd>
+        <dt><kbd>?</kbd></dt><dd>Mostrar esta lista</dd>
+      </dl>
+    </div>
+  </dialog>
+
+  <!-- ===== Janela: confirmação ===== -->
+  <dialog class="modal modal--small" id="confirmDialog" aria-labelledby="confirmTitle">
+    <form method="dialog" class="modal__box">
+      <h2 id="confirmTitle"></h2>
+      <p id="confirmText" class="muted"></p>
+      <div class="modal__foot">
+        <button value="cancel" class="pill-btn">Cancelar</button>
+        <button value="ok" class="pill-btn pill-btn--danger" id="confirmOk">Confirmar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/vendor/autoComplete.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

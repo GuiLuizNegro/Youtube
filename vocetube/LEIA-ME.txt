@@ -1,0 +1,38 @@
+VOCETUBE - plataforma de videos (front-end em HTML, CSS e JavaScript)
+
+COMO ABRIR
+  Extraia a pasta e clique duas vezes em index.html (Chrome ou Edge recomendados).
+  Internet so e necessaria para carregar as fontes; sem ela o site usa fontes do sistema.
+
+ESTRUTURA
+  index.html                     estrutura: topo, menu lateral, janelas e area do conteudo
+  css/style.css                  visual, tema claro/escuro e versao para celular
+  js/data.js                     DADOS: canais, videos, categorias e comentarios (edite aqui)
+  js/storage.js                  salva preferencias, historico, curtidas e videos enviados
+  js/player.js                   player de video com controles proprios
+  js/app.js                      paginas, rotas, busca, envio de video e atalhos
+  js/vendor/autoComplete.min.js  biblioteca de autocompletar (autoComplete.js 10.2.7, Apache-2.0)
+  img/                           pasta para suas imagens
+
+O QUE FUNCIONA
+  - Paginas: Inicio, Em alta, Seguindo, Historico, Ver depois, Curtidos, Canal, Busca e Video
+  - Enviar video do computador: toca de verdade e fica salvo no navegador
+  - Player: velocidade, volume, modo cinema, tela cheia, proximo video automatico
+  - Curtir, seguir, salvar, comentar, compartilhar link (inclusive em um tempo do video)
+  - Busca com sugestoes, filtros e pesquisa por voz (Chrome/Edge)
+  - Tema claro/escuro, notificacoes, versao para celular, atalhos de teclado (tecla ?)
+
+LIMITACOES
+  - Tudo fica salvo SO no navegador deste computador (nao ha servidor nem contas)
+  - Os videos de exemplo sao demonstracoes com nomes aleatorios (sem imagem real); so os enviados tocam de verdade
+  - Videos grandes podem esbarrar no limite de espaco do navegador
+
+TROCAR A COR PRINCIPAL
+  css/style.css -> variaveis --brand (marca) e --accent (botoes e links), no inicio do arquivo
+
+LIGACAO COM O BACK-END (Java)
+  js/api.js busca GET http://localhost:8080/api/videos ao abrir o site e troca os videos de exemplo
+  pelos videos do servidor. A API envia: id, titulo, urlThumbnail e nomeCanal; o restante
+  (categoria, duracao, curtidas) o site completa com valores padrao.
+  1) Rode o ServidorVideos no IntelliJ  2) abra o index.html.
+  Se o servidor estiver desligado, o site mostra os videos de exemplo e avisa na tela.

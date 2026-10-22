@@ -28,10 +28,22 @@ public class ServidorVideos {
         HttpServer servidor = HttpServer.create(new InetSocketAddress(8080), 0);
 
         servidor.createContext("/api/videos", troca -> {
+
+            // Só aceita GET
+            if (!"GET".equalsIgnoreCase(troca.getRequestMethod())) {
+                byte[] erro = "{\"erro\":\"Metodo nao permitido\"}".getBytes(StandardCharsets.UTF_8);
+                troca.getResponseHeaders().set("Content-Type", "application/json; charset=utf-8");
+                troca.getResponseHeaders().set("Allow", "GET");
+                troca.sendResponseHeaders(405, erro.length);
+                try (OutputStream saida = troca.getResponseBody()) {
+                    saida.write(erro);
+                }
+                return;
+            }
+
             byte[] resposta = montarJson().getBytes(StandardCharsets.UTF_8);
 
             troca.getResponseHeaders().set("Content-Type", "application/json; charset=utf-8");
-            // Permite que o front-end (outra porta/origem) acesse a API
             troca.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
             troca.sendResponseHeaders(200, resposta.length);
 

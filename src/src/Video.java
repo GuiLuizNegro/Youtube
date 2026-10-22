@@ -28,10 +28,11 @@ public class Video {
         return nomeCanal;
     }
 
-    @Override
-    public String toString() {
-        return "Video{id='" + id + "', titulo='" + titulo
-                + "', urlThumbnail='" + urlThumbnail
-                + "', nomeCanal='" + nomeCanal + "'}";
+    public void exibirVideo() {
+        System.out.println("ID: " + id);
+        System.out.println("Thumbnail: " + urlThumbnail);
+        System.out.println("Título: " + titulo);
+        System.out.println("Canal: " + nomeCanal);
     }
+
 }

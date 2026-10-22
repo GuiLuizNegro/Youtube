@@ -10,19 +10,14 @@ import java.util.List;
 
 /**
  * BE-02 — API de listagem (Java puro, sem frameworks).
- * GET /api/videos -> retorna a lista de vídeos em JSON.
+ * GET /api/videos -> retorna a lista de vídeos publicados em JSON.
+ * BE-03 — Os dados vêm do VideoRepository.
+ * BE-04 — Métodos diferentes de GET retornam 405.
  */
 public class ServidorVideos {
 
-    // Dados mocados (sem banco de dados)
-    private static final List<Video> VIDEOS = List.of(
-            new Video("v001", "Construindo um castelo gigante no Minecraft",
-                    "https://exemplo.com/thumbs/v001.jpg", "Rezendolas"),
-            new Video("v002", "Aventura no Nether com shaders pesados",
-                    "https://exemplo.com/thumbs/v002.jpg", "Leonam Edson"),
-            new Video("v003", "Tutorial de Java para iniciantes",
-                    "https://exemplo.com/thumbs/v003.jpg", "Canal Dev")
-    );
+    // Para testar a lista vazia, troque por: new VideoRepository(List.of())
+    private static final VideoRepository REPOSITORIO = VideoRepository.DadosTeste();
 
     public static void main(String[] args) throws IOException {
         HttpServer servidor = HttpServer.create(new InetSocketAddress(8080), 0);
@@ -41,7 +36,8 @@ public class ServidorVideos {
                 return;
             }
 
-            byte[] resposta = montarJson().getBytes(StandardCharsets.UTF_8);
+            List<Video> videos = REPOSITORIO.listarPublicados();
+            byte[] resposta = montarJson(videos).getBytes(StandardCharsets.UTF_8);
 
             troca.getResponseHeaders().set("Content-Type", "application/json; charset=utf-8");
             troca.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
@@ -56,18 +52,18 @@ public class ServidorVideos {
         System.out.println("Servidor rodando em http://localhost:8080/api/videos");
     }
 
-    // Transforma a lista de vídeos em texto JSON
-    private static String montarJson() {
+    // Transforma a lista de vídeos em texto JSON (lista vazia vira "[]")
+    private static String montarJson(List<Video> videos) {
         StringBuilder json = new StringBuilder("[");
-        for (int i = 0; i < VIDEOS.size(); i++) {
-            Video v = VIDEOS.get(i);
+        for (int i = 0; i < videos.size(); i++) {
+            Video v = videos.get(i);
             json.append("{")
                     .append("\"id\":\"").append(escapar(v.getId())).append("\",")
                     .append("\"titulo\":\"").append(escapar(v.getTitulo())).append("\",")
                     .append("\"urlThumbnail\":\"").append(escapar(v.getUrlThumbnail())).append("\",")
                     .append("\"nomeCanal\":\"").append(escapar(v.getNomeCanal())).append("\"")
                     .append("}");
-            if (i < VIDEOS.size() - 1) {
+            if (i < videos.size() - 1) {
                 json.append(",");
             }
         }

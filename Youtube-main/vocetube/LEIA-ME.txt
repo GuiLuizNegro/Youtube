@@ -1,0 +1,63 @@
+VOCETUBE - plataforma de videos (front-end em HTML, CSS e JavaScript + back-end em Java)
+
+COMO ABRIR
+  1) Rode o ServidorVideos (ou a classe Main) no IntelliJ.
+  2) Abra http://localhost:8080 no navegador (Chrome ou Edge recomendados).
+  O servidor entrega o site e a API. Sem ele o site nao mostra nada, porque
+  TODOS os dados (videos, canais, curtidas, historico...) ficam no servidor.
+  Internet so e necessaria para carregar as fontes; sem ela o site usa fontes do sistema.
+
+ESTRUTURA
+  index.html                     estrutura: topo, menu lateral, janelas e area do conteudo
+  css/style.css                  visual, tema claro/escuro e versao para celular
+  js/data.js                     so declara as variaveis de dados (vazias); quem preenche e o api.js
+  js/api.js                      conversa com o servidor: carrega os dados, envia e apaga videos
+  js/storage.js                  copia em memoria dos dados do usuario; grava no servidor a cada mudanca
+  js/player.js                   player de video com controles proprios
+  js/app.js                      paginas, rotas, busca, envio de video e atalhos
+  js/vendor/autoComplete.min.js  biblioteca de autocompletar (autoComplete.js 10.2.7, Apache-2.0)
+
+O QUE FUNCIONA
+  - Paginas: Inicio, Em alta, Seguindo, Historico, Ver depois, Curtidos, Canal, Busca e Video
+  - Enviar video do computador: o arquivo e enviado ao servidor e toca de verdade (da para avancar e voltar)
+  - Player: velocidade, volume, modo cinema, tela cheia, proximo video automatico
+  - Curtir, seguir, salvar, comentar, compartilhar link (inclusive em um tempo do video)
+  - Busca com sugestoes, filtros e pesquisa por voz (Chrome/Edge)
+  - Tema claro/escuro, notificacoes, versao para celular, atalhos de teclado (tecla ?)
+
+ONDE FICAM OS DADOS (BACK-END)
+  Pasta "dados", criada na raiz do projeto na primeira vez que o servidor sobe:
+    dados/banco.json        categorias, canais, videos, comentarios de exemplo e dados do usuario
+    dados/uploads/ID.bin    arquivo de cada video enviado
+    dados/uploads/ID.jpg    miniatura de cada video enviado
+  Para trocar canais, videos ou comentarios de exemplo: pare o servidor, edite dados/banco.json e suba de novo.
+  Para voltar aos dados iniciais (definidos em DadosIniciais.java): pare o servidor e apague a pasta "dados".
+  Dentro do site, "Apagar todos os seus dados" (menu da conta) limpa o historico, curtidas, comentarios e videos enviados.
+
+LIMITACOES
+  - Nao ha contas: quem acessar o servidor ve e altera os mesmos dados.
+  - Os videos de exemplo sao demonstracoes com nomes aleatorios (sem imagem real); so os enviados tocam de verdade
+  - Limite de 2 GB por video enviado
+
+TROCAR A COR PRINCIPAL
+  css/style.css -> variaveis --brand (marca) e --accent (botoes e links), no inicio do arquivo
+
+API (JAVA)
+  GET    /api/videos                    lista resumida: id, titulo, urlThumbnail, nomeCanal
+  GET    /api/videos/detalhes           videos completos (categoria, duracao, curtidas, cores...)
+  GET    /api/categorias                categorias e icones
+  GET    /api/canais                    canais
+  GET    /api/comentarios               comentarios de exemplo
+  GET    /api/estado                    estado do usuario (curtidas, historico, preferencias...)
+  PUT    /api/estado                    grava o estado do usuario
+  DELETE /api/estado                    apaga todos os dados do usuario
+  POST   /api/uploads                   cria um video enviado (titulo, descricao, categoria, duracao, miniatura)
+  PUT    /api/uploads/ID/arquivo        envia o arquivo do video
+  GET    /api/uploads/ID/arquivo        toca/baixa o video (aceita Range)
+  GET    /api/uploads/ID/miniatura      miniatura do video enviado
+  DELETE /api/uploads/ID                apaga um video enviado
+  Erros voltam em JSON: {"erro": "mensagem"}. Metodo errado = 405 (com cabecalho Allow); rota inexistente = 404.
+
+  Opcoes (variaveis de ambiente): PORTA (padrao 8080), PASTA_SITE, PASTA_DADOS.
+  Para abrir o index.html direto do disco, o site usa http://localhost:8080; para outro endereco,
+  defina window.VOCETUBE_API antes dos scripts no index.html.

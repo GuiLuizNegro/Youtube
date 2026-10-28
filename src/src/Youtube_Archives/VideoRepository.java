@@ -19,8 +19,8 @@ public class VideoRepository {
     // Cria o repositório já com os dados de teste (os mesmos vídeos do site VoceTube)
     public static VideoRepository DadosTeste() {
         return new VideoRepository(List.of(
-                new Video("v1", "Zerei o jogo inteiro com um controle quebrado",
-                        "https://exemplo.com/thumbs/v1.jpg", "Lhama Elétrica"),
+                new Video("v1", "Leonam Edson de Oliveira",
+                        "C://Users//Usuário\\Pictures\\Screenshots/Leonam.png\"", "Lhama Elétrica"),
                 new Video("v2", "Tentei viver um dia inteiro como um gato",
                         "https://exemplo.com/thumbs/v2.jpg", "Gato Filósofo"),
                 new Video("v3", "Brigadeiro de 7 sabores esquisitos",

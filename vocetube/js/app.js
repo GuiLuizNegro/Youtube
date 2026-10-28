@@ -438,7 +438,7 @@ function renderChannel(key) {
         : emptyState({
             icon: ICON.upload,
             title: mine ? 'Você ainda não enviou vídeos' : 'Este canal ainda não tem vídeos',
-            text: mine ? 'Envie um vídeo do seu computador: ele fica salvo neste navegador e toca de verdade no player.' : '',
+            text: mine ? 'Envie um vídeo do seu computador: ele fica salvo no servidor e toca de verdade no player.' : '',
             action: mine ? `<button class="pill-btn pill-btn--accent" data-open="upload">${ICON.upload}Enviar vídeo</button>` : ''
           })}
     </div>`;
@@ -583,15 +583,16 @@ async function renderWatch(id, params) {
   const descText = $('.description__text');
   if (descText.scrollHeight <= descText.clientHeight + 2) $('#descToggle').hidden = true;
 
-  /* Vídeo enviado: busca o arquivo salvo no navegador */
+  /* Vídeo enviado: o arquivo fica no servidor e o player o pede aos poucos (dá para avançar e voltar) */
   if (v.isUpload) {
-    const blob = await VideoDB.get(id);
+    const url = VideoApi.urlDoVideo(id);
+    const existe = await fetch(url, { headers: { Range: 'bytes=0-0' } }).then((r) => r.ok).catch(() => false);
     if (watchingId !== id) return; // usuário já trocou de página
-    if (!blob) {
-      $('#playerMount').innerHTML = `<div class="player player--error"><p>O arquivo deste vídeo não está mais salvo neste navegador.</p></div>`;
+    if (!existe) {
+      $('#playerMount').innerHTML = `<div class="player player--error"><p>O arquivo deste vídeo não foi encontrado no servidor.</p></div>`;
       return;
     }
-    v.src = URL.createObjectURL(blob);
+    v.src = url;
   }
 
   let startAt = Number(params.get('t')) || 0;
@@ -661,6 +662,7 @@ function parseRoute() {
 }
 
 function route() {
+  if (!VideoApi.online) return;   // ainda sem dados do servidor
   destroyPlayer();
   watchingId = null;
   const { parts, params } = parseRoute();
@@ -786,9 +788,9 @@ document.addEventListener('submit', (e) => {
 
 async function deleteUpload(id) {
   const v = getVideo(id);
-  const ok = await confirmBox({ title: 'Excluir este vídeo?', text: `“${v.title}” será apagado deste navegador. Esta ação não pode ser desfeita.`, ok: 'Excluir' });
+  const ok = await confirmBox({ title: 'Excluir este vídeo?', text: `“${v.title}” será apagado do servidor. Esta ação não pode ser desfeita.`, ok: 'Excluir' });
   if (!ok) return;
-  await VideoDB.remove(id);
+  try { await VideoApi.excluir(id); } catch (err) { return toast(err.message); }
   const d = Store.data;
   d.uploads = d.uploads.filter((u) => u.id !== id);
   ['saved', 'liked', 'disliked'].forEach((l) => { d[l] = d[l].filter((x) => x !== id); });
@@ -801,8 +803,8 @@ async function deleteUpload(id) {
 
 async function downloadUpload(id) {
   const v = getVideo(id);
-  const blob = await VideoDB.get(id);
-  if (!blob) return toast('Arquivo não encontrado');
+  let blob;
+  try { blob = await VideoApi.baixar(id); } catch { return toast('Arquivo não encontrado'); }
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = v.fileName || `${v.title}.mp4`;
@@ -914,12 +916,11 @@ $('#resetBtn').addEventListener('click', async () => {
   closePopovers();
   const ok = await confirmBox({
     title: 'Apagar todos os seus dados?',
-    text: 'Histórico, curtidas, comentários, canais seguidos e vídeos enviados serão apagados deste navegador. Esta ação não pode ser desfeita.',
+    text: 'Histórico, curtidas, comentários, canais seguidos e vídeos enviados serão apagados do servidor. Esta ação não pode ser desfeita.',
     ok: 'Apagar tudo'
   });
   if (!ok) return;
-  await VideoDB.clear();
-  Store.reset();
+  try { await Store.reset(); } catch { return toast('Não foi possível apagar os dados no servidor'); }
   location.hash = '#/';
   location.reload();
 });
@@ -1138,23 +1139,30 @@ $('#uploadForm').addEventListener('submit', async (e) => {
   const title = $('#upTitle').value.trim();
   if (!title) { $('#upTitle').focus(); return uploadError('Escreva um título para o vídeo.'); }
 
-  $('#uploadSubmit').disabled = true;
-  const id = 'u' + Date.now().toString(36);
-  const saved = await VideoDB.put(id, pendingUpload.file);
-  Store.data.uploads.unshift({
-    id, title,
-    desc: $('#upDesc').value.trim(),
-    cat: $('#upCat').value,
-    dur: pendingUpload.dur,
-    thumb: pendingUpload.thumb,
-    fileName: pendingUpload.file.name,
-    created: Date.now()
-  });
-  Store.save();
+  /* Manda o vídeo para o servidor (api.js); o id é criado lá */
+  const botao = $('#uploadSubmit');
+  botao.disabled = true;
+  botao.textContent = 'Enviando…';
+  let enviado;
+  try {
+    enviado = await VideoApi.enviar(pendingUpload.file, {
+      titulo: title,
+      descricao: $('#upDesc').value.trim(),
+      categoria: $('#upCat').value,
+      duracao: pendingUpload.dur,
+      miniatura: pendingUpload.thumb
+    });
+  } catch (err) {
+    botao.disabled = false;
+    botao.textContent = 'Publicar';
+    return uploadError(err.message);
+  }
+  botao.textContent = 'Publicar';
+  Store.data.uploads.unshift(enviado);
   $('#uploadDialog').close();
-  toast(saved ? 'Vídeo publicado' : 'Vídeo publicado só nesta sessão (o navegador não permitiu salvar o arquivo)');
+  toast('Vídeo publicado');
   renderNotifBadge();
-  location.hash = `#/v/${id}`;
+  location.hash = `#/v/${enviado.id}`;
 });
 
 /* ----- Compartilhar ----- */
@@ -1214,15 +1222,28 @@ window.addEventListener('resize', debounce(() => { if (!isDrawerMode()) document
 
 window.addEventListener('hashchange', route);
 
-/* Início */
-document.body.classList.toggle('sidebar-mini', Store.data.sidebarMini);
-applyTheme();
+/* Início: busca tudo no back-end (api.js) e só então desenha o site */
+function iniciar() {
+  app().innerHTML = '<p class="muted" style="padding:24px">Carregando vídeos…</p>';
+  VideoApi.load().then((ok) => {
+    if (!ok) return mostrarServidorForaDoAr();
+    document.body.classList.toggle('sidebar-mini', Store.data.sidebarMini);
+    applyTheme();
+    renderChannelList();
+    renderNotifBadge();
+    route();
+  });
+}
 
-/* Busca os vídeos no back-end (api.js) e só então desenha o site */
-app().innerHTML = '<p class="muted" style="padding:24px">Carregando vídeos…</p>';
-VideoApi.load().then((ok) => {
-  renderChannelList();
-  renderNotifBadge();
-  route();
-  if (!ok) toast('Servidor fora do ar: mostrando vídeos de exemplo');
-});
+/* Sem servidor não há dados: mostra um aviso com botão para tentar de novo */
+function mostrarServidorForaDoAr() {
+  document.title = 'VoceTube';
+  app().innerHTML = `<div class="page page--narrow">${emptyState({
+    title: 'Não foi possível conectar ao servidor',
+    text: 'Os vídeos e os dados do site vêm do servidor Java. Rode o ServidorVideos e tente de novo.',
+    action: '<button class="pill-btn pill-btn--accent" data-retry>Tentar de novo</button>'
+  })}</div>`;
+  $('[data-retry]').addEventListener('click', iniciar);
+}
+
+iniciar();

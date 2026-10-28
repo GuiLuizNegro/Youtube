@@ -20,3 +20,10 @@ Criar uma interface front/back end semelhante ao aplicativo de vídeos "YouTube"
 ## Back End:
 - Carlos Eduardo
 - Luiz Benevento
+
+## Como rodar:
+1. Abra o projeto no IntelliJ e rode `Youtube_Archives.Main` (ou `ServidorVideos`) com o diretório de trabalho na raiz do projeto.
+2. Acesse http://localhost:8080 — o servidor entrega o site e a API.
+
+Todo o banco de dados fica no back end (Java puro, sem bibliotecas externas): `BancoDeDados.java` grava em `dados/banco.json`
+e os vídeos enviados em `dados/uploads/`. Detalhes da API e da estrutura em `vocetube/LEIA-ME.txt`.

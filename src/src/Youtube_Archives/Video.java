@@ -43,7 +43,7 @@ public class Video {
     public Video(String id, String canal, String nomeCanal, String categoria, String titulo,
                  String descricao, double duracao, long visualizacoes, int dias, long curtidas,
                  String cor1, String cor2) {
-        this(id, titulo, "", nomeCanal);
+        this(id, titulo, "/img/thumbs/" + id + ".jpg", nomeCanal);
         this.canal = canal;
         this.categoria = categoria;
         this.descricao = descricao;

@@ -146,7 +146,7 @@
     {
       "id": "v1",
       "titulo": "Zerei o jogo inteiro com um controle quebrado",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v1.jpg",
       "nomeCanal": "Lhama Elétrica",
       "canal": "lhama",
       "categoria": "Games",
@@ -166,7 +166,7 @@
     {
       "id": "v2",
       "titulo": "Tentei viver um dia inteiro como um gato",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v2.jpg",
       "nomeCanal": "Gato Filósofo",
       "canal": "gato",
       "categoria": "Humor",
@@ -186,7 +186,7 @@
     {
       "id": "v3",
       "titulo": "Brigadeiro de 7 sabores esquisitos",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v3.jpg",
       "nomeCanal": "Mamão com Açúcar",
       "canal": "mamao",
       "categoria": "Culinária",
@@ -206,7 +206,7 @@
     {
       "id": "v4",
       "titulo": "Pão de queijo perfeito em 5 passos",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v4.jpg",
       "nomeCanal": "Bruxo do Café",
       "canal": "bruxo",
       "categoria": "Culinária",
@@ -226,7 +226,7 @@
     {
       "id": "v5",
       "titulo": "Os atalhos de teclado que mais economizam tempo",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v5.jpg",
       "nomeCanal": "Zé do Pixel",
       "canal": "pixel",
       "categoria": "Tecnologia",
@@ -246,7 +246,7 @@
     {
       "id": "v6",
       "titulo": "Dublando meu cachorro por uma semana",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v6.jpg",
       "nomeCanal": "Tigre de Papel",
       "canal": "tigre",
       "categoria": "Humor",
@@ -266,7 +266,7 @@
     {
       "id": "v7",
       "titulo": "Fui a pé até a praia mais distante da ilha",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v7.jpg",
       "nomeCanal": "Dona Nuvem",
       "canal": "nuvem",
       "categoria": "Viagens",
@@ -286,7 +286,7 @@
     {
       "id": "v8",
       "titulo": "Lo-fi para estudar — 2 horas sem anúncios",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v8.jpg",
       "nomeCanal": "Panda Sonolento",
       "canal": "panda",
       "categoria": "Música",
@@ -306,7 +306,7 @@
     {
       "id": "v9",
       "titulo": "Reagindo a vídeos de gente que odeia segunda-feira",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v9.jpg",
       "nomeCanal": "Cacto Falante",
       "canal": "cacto",
       "categoria": "Humor",
@@ -326,7 +326,7 @@
     {
       "id": "v10",
       "titulo": "Os 7 finais de jogo mais malucos (sem spoiler pesado)",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v10.jpg",
       "nomeCanal": "Pipoca Cósmica",
       "canal": "pipoca",
       "categoria": "Games",
@@ -346,7 +346,7 @@
     {
       "id": "v11",
       "titulo": "Montei meu setup com R$ 2.000",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v11.jpg",
       "nomeCanal": "Zé do Pixel",
       "canal": "pixel",
       "categoria": "Tecnologia",
@@ -366,7 +366,7 @@
     {
       "id": "v12",
       "titulo": "Treino de 10 minutos sem nenhum equipamento",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v12.jpg",
       "nomeCanal": "Zé do Pixel",
       "canal": "pixel",
       "categoria": "Esportes",
@@ -386,7 +386,7 @@
     {
       "id": "v13",
       "titulo": "Aprendi a surfar em 30 dias (quase)",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v13.jpg",
       "nomeCanal": "Tigre de Papel",
       "canal": "tigre",
       "categoria": "Esportes",
@@ -406,7 +406,7 @@
     {
       "id": "v14",
       "titulo": "Speedrun de um jogo que ninguém conhece",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v14.jpg",
       "nomeCanal": "Lhama Elétrica",
       "canal": "lhama",
       "categoria": "Games",
@@ -426,7 +426,7 @@
     {
       "id": "v15",
       "titulo": "Estrada da serra de moto: 3 dias de viagem",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v15.jpg",
       "nomeCanal": "Dona Nuvem",
       "canal": "nuvem",
       "categoria": "Viagens",
@@ -446,7 +446,7 @@
     {
       "id": "v16",
       "titulo": "Pizza de frigideira que dá certo",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v16.jpg",
       "nomeCanal": "Mamão com Açúcar",
       "canal": "mamao",
       "categoria": "Culinária",
@@ -466,7 +466,7 @@
     {
       "id": "v17",
       "titulo": "Piano para dias chuvosos",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v17.jpg",
       "nomeCanal": "Panda Sonolento",
       "canal": "panda",
       "categoria": "Música",
@@ -486,7 +486,7 @@
     {
       "id": "v18",
       "titulo": "Banda de garagem toca no elevador",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v18.jpg",
       "nomeCanal": "Bruxo do Café",
       "canal": "bruxo",
       "categoria": "Música",
@@ -506,7 +506,7 @@
     {
       "id": "v19",
       "titulo": "Cardápio de restaurante que só tem erro de português",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v19.jpg",
       "nomeCanal": "Cacto Falante",
       "canal": "cacto",
       "categoria": "Humor",
@@ -526,7 +526,7 @@
     {
       "id": "v20",
       "titulo": "Joguei só jogos de 1 botão por um mês",
-      "urlThumbnail": "",
+      "urlThumbnail": "/img/thumbs/v20.jpg",
       "nomeCanal": "Pipoca Cósmica",
       "canal": "pipoca",
       "categoria": "Games",

@@ -5,7 +5,7 @@ Repositório para o Projeto da matéria de Gerenciamento de Projetos do grupo 6.
 Criar uma interface front/back end semelhante ao aplicativo de vídeos "YouTube".
 
 ## Project Owner: 
-- Guilherme Luiz Negro;
+- Matheus Yudi Kobayashi;
 
 ## Membros:
 - Carlos Eduardo de Souza Silva;
@@ -20,6 +20,7 @@ Criar uma interface front/back end semelhante ao aplicativo de vídeos "YouTube"
 ## Back End:
 - Carlos Eduardo
 - Luiz Benevento
+- Guilherme Luiz
 
 ## Como rodar:
 1. Abra o projeto no IntelliJ e rode `Youtube_Archives.Main` (ou `ServidorVideos`) com o diretório de trabalho na raiz do projeto.

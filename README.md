@@ -9,7 +9,7 @@ Criar uma interface front/back end semelhante ao aplicativo de vídeos "YouTube"
 
 ## Membros:
 - Carlos Eduardo de Souza Silva;
-- Matheus Yudi Kobayashi;
+- Guilherme Luiz Negro;
 - Leonam Edson de Oliveira;
 - Luiz Henrique Benevento
 
@@ -20,7 +20,7 @@ Criar uma interface front/back end semelhante ao aplicativo de vídeos "YouTube"
 ## Back End:
 - Carlos Eduardo
 - Luiz Benevento
-- Guilherme Luiz
+- Guilherme Negro
 
 ## Como rodar:
 1. Abra o projeto no IntelliJ e rode `Youtube_Archives.Main` (ou `ServidorVideos`) com o diretório de trabalho na raiz do projeto.

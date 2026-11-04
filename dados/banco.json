@@ -613,23 +613,77 @@
   "estado": {
     "theme": null,
     "following": [
+      "mamao",
       "pipoca",
       "gato"
     ],
-    "liked": [],
-    "disliked": [],
+    "liked": [
+      "v3"
+    ],
+    "disliked": [
+      "v2"
+    ],
     "saved": [],
     "history": [
+      {
+        "id": "v3",
+        "pos": 420.47915984233015,
+        "at": 1793313695037
+      },
+      {
+        "id": "v14",
+        "pos": 4.202299999999814,
+        "at": 1793312725566
+      },
+      {
+        "id": "v16",
+        "pos": 10.408899999999905,
+        "at": 1793312186376
+      },
+      {
+        "id": "v2",
+        "pos": 18.01280000000028,
+        "at": 1793234576822
+      },
+      {
+        "id": "v1",
+        "pos": 0.206,
+        "at": 1793234543670
+      },
+      {
+        "id": "v11",
+        "pos": 2.403299999999814,
+        "at": 1793234541072
+      },
       {
         "id": "v6",
         "pos": 9.601799999999812,
         "at": 1793229181569
       }
     ],
-    "comments": {},
-    "commentLikes": [],
+    "comments": {
+      "v3": [
+        {
+          "id": "cmvu4ojz1",
+          "text": "assdfghjk",
+          "at": 1793313711901
+        }
+      ],
+      "v14": []
+    },
+    "commentLikes": [
+      "cmvu3tgh2",
+      "cmvu3t7wp",
+      "v2-s1"
+    ],
     "views": {
-      "v6": 1
+      "v6": 1,
+      "v11": 1,
+      "v1": 1,
+      "v2": 4,
+      "v16": 1,
+      "v3": 6,
+      "v14": 2
     },
     "theater": false,
     "autoplay": true,
@@ -637,6 +691,6 @@
     "muted": false,
     "speed": 1,
     "sidebarMini": false,
-    "notifSeenAt": 0
+    "notifSeenAt": 1793312735628
   }
 }

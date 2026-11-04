@@ -4,12 +4,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * BE-03 — Disponibiliza os dados dos vídeos publicados.
- *
- * Agora os dados vêm do BancoDeDados (arquivo dados/banco.json), e não mais de uma lista fixa no código.
- * O resto do sistema continua falando só com esta classe para pegar vídeos.
- */
 public class VideoRepository {
 
     private final BancoDeDados banco;

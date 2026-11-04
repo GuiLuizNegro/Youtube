@@ -15,24 +15,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-/**
- * Banco de dados do VoceTube, em Java puro (sem bibliotecas externas).
- *
- * Guarda tudo o que antes ficava no front-end:
- *   - catálogo: categorias, canais, vídeos e comentários de exemplo (antes: js/data.js)
- *   - estado do usuário: curtidas, histórico, comentários, preferências... (antes: localStorage)
- *   - arquivos dos vídeos enviados e suas miniaturas (antes: IndexedDB)
- *
- * No disco fica assim (a pasta "dados" é criada na raiz do projeto):
- *   dados/banco.json          tudo, menos os arquivos de vídeo
- *   dados/uploads/ID.bin      arquivo do vídeo enviado
- *   dados/uploads/ID.jpg      miniatura do vídeo enviado
- *
- * Todos os métodos públicos são sincronizados: o servidor atende vários pedidos ao mesmo tempo.
- */
 public class BancoDeDados {
 
-    /** IDs de vídeo só podem ter letras, números, _ e - (evita acessar outras pastas). */
     private static final Pattern ID_VALIDO = Pattern.compile("[A-Za-z0-9_-]{1,40}");
     private static final SecureRandom SORTEIO = new SecureRandom();
 
@@ -49,8 +33,6 @@ public class BancoDeDados {
         this.arquivoBanco = arquivoBanco;
         this.pastaUploads = pastaUploads;
     }
-
-    // ------------------------------------------------------------ criação
 
     /** Abre o banco na pasta indicada. Se ainda não existir, cria já com os dados iniciais. */
     public static BancoDeDados abrir(Path pastaDados) {

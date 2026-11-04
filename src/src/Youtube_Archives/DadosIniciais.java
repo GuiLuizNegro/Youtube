@@ -2,11 +2,6 @@ package Youtube_Archives;
 
 import java.util.List;
 
-/**
- * Dados iniciais do VoceTube (antes ficavam no js/data.js do site).
- * São gravados no banco (dados/banco.json) na primeira vez que o servidor sobe;
- * depois disso o que vale é o arquivo do banco.
- */
 public final class DadosIniciais {
 
     private DadosIniciais() {
@@ -24,7 +19,7 @@ public final class DadosIniciais {
         );
     }
 
-    /** A ordem importa: é a ordem em que os canais aparecem no site. */
+    /** Os canais aparecem no site. */
     public static List<Canal> canais() {
         return List.of(
                 new Canal("me", "Meu canal", "@meucanal", "M", "#F59E0B",

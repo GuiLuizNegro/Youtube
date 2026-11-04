@@ -6,12 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Leitor e escritor de JSON em Java puro (o projeto não usa bibliotecas externas).
- *
- * Tipos usados: Map (objeto), List (lista), String, Number, Boolean e null.
- * Números inteiros voltam como Long; os demais como Double.
- */
 public final class Json {
 
     private Json() {

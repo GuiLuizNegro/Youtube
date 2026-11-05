@@ -66,3 +66,8 @@ API (JAVA)
   Opcoes (variaveis de ambiente): PORTA (padrao 8080), PASTA_SITE, PASTA_DADOS.
   Para abrir o index.html direto do disco, o site usa http://localhost:8080; para outro endereco,
   defina window.VOCETUBE_API antes dos scripts no index.html.
+
+Shorts (#/shorts)
+  - Videos curtos na vertical com rolagem infinita (mouse, dedo, setas do teclado ou botoes)
+  - Shorts de exemplo em js/shorts-data.js (fotos em img/shorts/, creditos em img/shorts/CREDITOS.txt)
+  - Videos enviados com ate 60 s tambem aparecem nos Shorts e tocam de verdade

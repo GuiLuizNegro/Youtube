@@ -61,15 +61,18 @@
       </div>
 
       <div class="popover-wrap">
-        <button class="avatar avatar--me avatar-btn" id="accountBtn" aria-label="Sua conta" aria-haspopup="true" aria-expanded="false">M</button>
+        <button class="avatar avatar--me avatar-btn" id="accountBtn" data-me-avatar aria-label="Sua conta" aria-haspopup="true" aria-expanded="false">L</button>
         <div class="popover popover--account" id="accountPanel" hidden>
           <div class="account-head">
-            <span class="avatar avatar--me avatar--lg" aria-hidden="true">M</span>
-            <div><strong>Meu canal</strong><span class="muted small">@meucanal</span></div>
+            <span class="avatar avatar--me avatar--lg" data-me-avatar aria-hidden="true">M</span>
+            <div><strong data-me-name>Leonam Games</strong><span class="muted small" data-me-handle>@euleonam</span></div>
           </div>
           <a href="#/c/me" class="menu-item">
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Seu canal
           </a>
+          <button class="menu-item" data-open="profile">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>Personalizar canal
+          </button>
           <button class="menu-item" data-open="upload">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg>Enviar vídeo
           </button>
@@ -174,6 +177,63 @@
       <div class="modal__foot">
         <button type="button" class="pill-btn" data-close>Cancelar</button>
         <button type="submit" class="pill-btn pill-btn--accent" id="uploadSubmit" value="send">Publicar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ===== Janela: personalizar canal ===== -->
+  <dialog class="modal" id="profileDialog" aria-labelledby="profileTitle">
+    <form method="dialog" class="modal__box" id="profileForm">
+      <div class="modal__head">
+        <h2 id="profileTitle">Personalizar canal</h2>
+        <button type="button" class="icon-btn" data-close aria-label="Fechar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+
+      <div class="profile-edit">
+        <div class="profile-edit__banner channel-banner" id="pfBannerPreview" style="--ch:#F59E0B"></div>
+        <div class="profile-edit__row">
+          <span class="avatar avatar--huge profile-edit__avatar" id="pfAvatarPreview" aria-hidden="true">M</span>
+          <div class="profile-edit__btns">
+            <div>
+              <label class="pill-btn" for="pfAvatarFile">Trocar foto</label>
+              <input type="file" id="pfAvatarFile" accept="image/*" class="sr-only">
+              <button type="button" class="pill-btn" id="pfAvatarClear" hidden>Remover</button>
+            </div>
+            <div>
+              <label class="pill-btn" for="pfBannerFile">Trocar banner</label>
+              <input type="file" id="pfBannerFile" accept="image/*" class="sr-only">
+              <button type="button" class="pill-btn" id="pfBannerClear" hidden>Remover</button>
+            </div>
+            <span class="muted small">Imagens JPG, PNG ou WebP. Banner ideal: 1200 × 300.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="pfName">Nome do canal</label>
+        <input id="pfName" maxlength="40" placeholder="Leonam Games">
+        <span class="field__count"><span id="pfNameCount">0</span>/40</span>
+      </div>
+      <div class="field">
+        <label for="pfHandle">Identificador</label>
+        <input id="pfHandle" maxlength="30" placeholder="@euleonam" autocapitalize="none" spellcheck="false">
+      </div>
+      <div class="field">
+        <label for="pfAbout">Sobre o canal</label>
+        <textarea id="pfAbout" rows="3" maxlength="500" placeholder="Conte o que as pessoas encontram no seu canal"></textarea>
+      </div>
+      <fieldset class="field swatches">
+        <legend>Cor do canal <span class="muted small">(avatar sem foto e banner sem imagem)</span></legend>
+        <div class="swatches__row" id="pfColors" role="radiogroup" aria-label="Cor do canal"></div>
+      </fieldset>
+      <p class="form-error" id="profileError" role="alert" hidden></p>
+
+      <div class="modal__foot">
+        <button type="button" class="pill-btn" id="pfReset">Restaurar padrão</button>
+        <button type="button" class="pill-btn" data-close>Cancelar</button>
+        <button type="submit" class="pill-btn pill-btn--accent" value="save">Salvar</button>
       </div>
     </form>
   </dialog>

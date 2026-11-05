@@ -162,6 +162,7 @@ svg .fill { fill: currentColor; stroke: none; }
 .avatar--huge { width: 120px; height: 120px; flex-basis: 120px; font-size: 48px; border: 4px solid var(--bg); }
 .avatar--me { width: 40px; height: 40px; flex-basis: 40px; background: #F59E0B; font-size: 16px; }
 .avatar-btn { cursor: pointer; }
+.avatar.has-img { background-size: cover; background-position: center; background-repeat: no-repeat; }
 
 .badge {
   position: absolute; top: 4px; right: 2px;
@@ -1045,3 +1046,22 @@ kbd {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+
+/* ============ Personalizar canal ============ */
+.channel-banner.has-img { background-size: cover; background-position: center; }
+.profile-edit { display: flex; flex-direction: column; }
+.profile-edit__banner { margin-top: 0; height: 110px; }
+.profile-edit__row { display: flex; align-items: flex-end; gap: 16px; padding: 0 8px; flex-wrap: wrap; }
+.profile-edit__avatar { margin-top: -36px; width: 96px; height: 96px; flex-basis: 96px; font-size: 38px; }
+.profile-edit__btns { display: flex; flex-direction: column; gap: 8px; padding-top: 10px; flex: 1; min-width: 200px; }
+.profile-edit__btns > div { display: flex; gap: 8px; flex-wrap: wrap; }
+.profile-edit label.pill-btn { cursor: pointer; }
+.profile-edit input[type="file"]:focus-visible + .pill-btn, .profile-edit label.pill-btn:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.swatches { border: 0; padding: 0; margin: 0; min-width: 0; }
+.swatches legend { font-weight: 600; font-size: 14px; padding: 0; margin-bottom: 8px; }
+.swatches__row { display: flex; flex-wrap: wrap; gap: 10px; }
+.swatch { width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; background: var(--sw); cursor: pointer; padding: 0; box-shadow: inset 0 0 0 2px var(--surface); }
+.swatch[aria-checked="true"] { border-color: var(--text); }
+.swatch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 700px) { .profile-edit__banner { height: 84px; } }

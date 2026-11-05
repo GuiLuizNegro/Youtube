@@ -114,13 +114,19 @@ const ICON = {
   save: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg>',
   upload: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg>',
   download: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 20h16"/></svg>',
+  edit: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>',
   search: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
   empty: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>'
 };
 
+/* Avatar do canal: foto (se houver) ou inicial sobre a cor do canal */
+const avClass = (c) => (c.img ? ' has-img' : '');
+const avStyle = (c) => `background-color:${c.color}${c.img ? `;background-image:url(${c.img})` : ''}`;
+const avText = (c) => (c.img ? '' : esc(c.ini));
+
 function avatar(key, size = '') {
   const c = CHANNELS[key];
-  return `<a href="#/c/${key}" class="avatar ${size}" style="background:${c.color}" aria-label="Canal ${esc(c.name)}">${c.ini}</a>`;
+  return `<a href="#/c/${key}" class="avatar ${size}${avClass(c)}" style="${avStyle(c)}" aria-label="Canal ${esc(c.name)}">${avText(c)}</a>`;
 }
 
 function thumb(v) {
@@ -270,7 +276,7 @@ function renderFollowing() {
       <div class="following-row">
         ${keys.map((k) => `
           <a href="#/c/${k}" class="following-row__item">
-            <span class="avatar avatar--xl" style="background:${CHANNELS[k].color}" aria-hidden="true">${CHANNELS[k].ini}</span>
+            <span class="avatar avatar--xl${avClass(CHANNELS[k])}" style="${avStyle(CHANNELS[k])}" aria-hidden="true">${avText(CHANNELS[k])}</span>
             <span>${esc(CHANNELS[k].name)}</span>
           </a>`).join('')}
       </div>
@@ -409,15 +415,15 @@ function renderChannel(key) {
 
   app().innerHTML = `
     <div class="page">
-      <div class="channel-banner" style="--ch:${c.color}"></div>
+      <div class="channel-banner${c.banner ? ' has-img' : ''}" style="--ch:${c.color}${c.banner ? `;background-image:url(${c.banner})` : ''}"></div>
       <div class="channel-head">
-        <span class="avatar avatar--huge" style="background:${c.color}" aria-hidden="true">${c.ini}</span>
+        <span class="avatar avatar--huge${avClass(c)}" style="${avStyle(c)}" aria-hidden="true">${avText(c)}</span>
         <div class="channel-head__text">
           <h1>${esc(c.name)}${verified(key)}</h1>
           <p class="muted">${c.handle} · ${fmtCount(followersOf(key))} inscritos · ${list.length} ${list.length === 1 ? 'vídeo' : 'vídeos'}</p>
           <p class="muted channel-head__about">${esc(c.about)}</p>
           <div class="channel-head__actions">
-            ${mine ? `<button class="pill-btn pill-btn--accent" data-open="upload">${ICON.upload}Enviar vídeo</button>` : followButton(key)}
+            ${mine ? `<button class="pill-btn" data-open="profile">${ICON.edit}Personalizar canal</button><button class="pill-btn pill-btn--accent" data-open="upload">${ICON.upload}Enviar vídeo</button>` : followButton(key)}
           </div>
         </div>
       </div>
@@ -463,7 +469,7 @@ function commentsFor(v) {
     const c = COMMENT_POOL[(start + i) % COMMENT_POOL.length];
     return { ...c, id: `${v.id}-s${i}`, at: Math.max(v.publishedAt + (i + 1) * 3600000, Date.now() - c.days * DAY - i * 7200000) };
   });
-  const mine = (Store.data.comments[v.id] || []).map((c) => ({ ...c, name: 'Você', ini: 'M', color: '#F59E0B', likes: 0, mine: true }));
+  const mine = (Store.data.comments[v.id] || []).map((c) => ({ ...c, name: 'Você', ini: CHANNELS.me.ini, color: CHANNELS.me.color, img: CHANNELS.me.img, likes: 0, mine: true }));
   const all = [...mine, ...samples];
   const likesOfC = (c) => c.likes + (Store.has('commentLikes', c.id) ? 1 : 0);
   if (view.commentSort === 'top') all.sort((a, b) => (b.mine - a.mine) || likesOfC(b) - likesOfC(a));
@@ -485,7 +491,7 @@ function commentsHTML(v) {
       </label>
     </div>
     <form class="comment-form" id="commentForm">
-      <span class="avatar avatar--me" aria-hidden="true">M</span>
+      <span class="avatar avatar--me${avClass(CHANNELS.me)}" style="${avStyle(CHANNELS.me)}" aria-hidden="true">${avText(CHANNELS.me)}</span>
       <label class="sr-only" for="commentInput">Adicionar um comentário</label>
       <input id="commentInput" placeholder="Adicione um comentário…" autocomplete="off" maxlength="500">
       <button type="submit" class="pill-btn pill-btn--accent" disabled id="commentSend">Comentar</button>
@@ -493,7 +499,7 @@ function commentsHTML(v) {
     <div class="comment-list">
       ${list.map((c) => `
         <div class="comment">
-          <span class="avatar" style="background:${c.color}" aria-hidden="true">${esc(c.ini)}</span>
+          <span class="avatar${avClass(c)}" style="${avStyle(c)}" aria-hidden="true">${avText(c)}</span>
           <div class="comment__body">
             <span class="comment__head"><strong>${esc(c.name)}</strong><span class="muted">${ago(c.at)}</span></span>
             <p>${esc(c.text)}</p>
@@ -870,7 +876,7 @@ function renderChannelList() {
   $('#channelList').innerHTML = keys.length
     ? keys.map((k) => `
         <a href="#/c/${k}" class="nav-item">
-          <span class="avatar avatar--xs" style="background:${CHANNELS[k].color}" aria-hidden="true">${CHANNELS[k].ini}</span>
+          <span class="avatar avatar--xs${avClass(CHANNELS[k])}" style="${avStyle(CHANNELS[k])}" aria-hidden="true">${avText(CHANNELS[k])}</span>
           <span>${esc(CHANNELS[k].name)}</span>
         </a>`).join('')
     : '<p class="sidebar__hint">Os canais que você seguir aparecem aqui.</p>';
@@ -910,7 +916,7 @@ $('#notifBtn').addEventListener('click', () => {
   const list = notifications();
   $('#notifList').innerHTML = list.length ? list.map((v) => `
     <a href="#/v/${v.id}" class="notif ${v.publishedAt > Store.data.notifSeenAt ? 'is-new' : ''}">
-      <span class="avatar avatar--sm" style="background:${CHANNELS[v.ch].color}" aria-hidden="true">${CHANNELS[v.ch].ini}</span>
+      <span class="avatar avatar--sm${avClass(CHANNELS[v.ch])}" style="${avStyle(CHANNELS[v.ch])}" aria-hidden="true">${avText(CHANNELS[v.ch])}</span>
       <span class="notif__text">
         <span>${v.isUpload ? 'Seu vídeo foi publicado' : `${esc(CHANNELS[v.ch].name)} publicou`}: <strong>${esc(v.title)}</strong></span>
         <span class="muted small">${ago(v.publishedAt)}</span>
@@ -1066,12 +1072,159 @@ $('#voiceBtn').addEventListener('click', () => {
 /* ============ 9. Janelas ============ */
 function openDialog(name) {
   if (name === 'upload') return openUpload();
+  if (name === 'profile') return openProfile();
   if (name === 'shortcuts') return $('#shortcutsDialog').showModal();
 }
 $$('dialog').forEach((dlg) => {
   dlg.addEventListener('click', (e) => {
     if (e.target === dlg || e.target.closest('[data-close]')) dlg.close();
   });
+});
+
+/* ----- Personalizar canal (perfil de "Meu canal") ----- */
+const ME_DEFAULT = {
+  name: 'Leonam Games', handle: '@euleonam', ini: 'L', color: '#A78BFA',
+  about: 'Gameplays, zeradas e muita resenha de console. Aperte START e bora jogar! Vídeo novo toda semana.',
+  avatar: 'img/profile/avatar.svg', banner: 'img/profile/banner.svg'   // mesmo perfil padrão do back-end (EstadoUsuario.Perfil)
+};
+const PROFILE_COLORS = ['#F59E0B', '#38BDF8', '#34D399', '#F472B6', '#A78BFA', '#F87171', '#FBBF24', '#94A3B8'];
+const IMG_OK = /^(data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+|img\/profile\/[a-z0-9_-]+\.(svg|png|jpg|webp))$/;   // fotos geradas aqui ou imagens do próprio site
+
+function cleanHandle(txt) {
+  const h = String(txt || '').trim().replace(/^@+/, '').toLowerCase().replace(/[^a-z0-9_.-]/g, '');
+  return h ? '@' + h.slice(0, 30) : '';
+}
+
+/* Aplica o perfil salvo sobre o canal "me" e atualiza topo, menu da conta e menu lateral */
+function applyProfile() {
+  const p = Store.data.profile || {};
+  const me = CHANNELS.me;
+  me.name = p.name || ME_DEFAULT.name;
+  me.handle = p.handle || ME_DEFAULT.handle;
+  me.about = p.about || ME_DEFAULT.about;
+  me.color = /^#[0-9a-f]{6}$/i.test(p.color) ? p.color : ME_DEFAULT.color;
+  me.ini = [...me.name.trim()][0]?.toUpperCase() || ME_DEFAULT.ini;
+  me.img = IMG_OK.test(p.avatar) ? p.avatar : '';
+  me.banner = IMG_OK.test(p.banner) ? p.banner : '';
+
+  $$('[data-me-avatar]').forEach((el) => {
+    el.style.cssText = avStyle(me);
+    el.classList.toggle('has-img', Boolean(me.img));
+    el.textContent = me.img ? '' : me.ini;
+  });
+  $$('[data-me-name]').forEach((el) => { el.textContent = me.name; });
+  $$('[data-me-handle]').forEach((el) => { el.textContent = me.handle; });
+}
+
+/* Reduz a imagem escolhida (corta no formato pedido) e devolve um data URL JPEG pequeno */
+async function resizeImage(file, w, h, quality) {
+  if (!file.type.startsWith('image/')) throw new Error('Escolha um arquivo de imagem.');
+  if (file.size > 15 * 1024 * 1024) throw new Error('A imagem é grande demais (máximo de 15 MB).');
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((ok, fail) => {
+      const i = new Image();
+      i.onload = () => ok(i);
+      i.onerror = () => fail(new Error('Não foi possível ler esta imagem.'));
+      i.src = url;
+    });
+    const scale = Math.max(w / img.naturalWidth, h / img.naturalHeight);   // "cover": preenche e corta o excesso
+    const sw = w / scale, sh = h / scale;
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);   // PNG transparente vira fundo branco no JPEG
+    ctx.drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - sh) / 2, sw, sh, 0, 0, w, h);
+    return canvas.toDataURL('image/jpeg', quality);
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+let draft = null;   // rascunho do que está sendo editado na janela
+
+function profileError(msg) {
+  const el = $('#profileError');
+  el.textContent = msg || '';
+  el.hidden = !msg;
+}
+
+/* Redesenha a prévia (banner, avatar e botões "Remover") conforme o rascunho */
+function paintProfileDraft() {
+  const c = draft.color;
+  const name = $('#pfName').value.trim() || ME_DEFAULT.name;
+  const banner = $('#pfBannerPreview'), av = $('#pfAvatarPreview');
+  banner.style.cssText = `--ch:${c}${draft.banner ? `;background-image:url(${draft.banner})` : ''}`;
+  banner.classList.toggle('has-img', Boolean(draft.banner));
+  av.style.cssText = avStyle({ color: c, img: draft.avatar });
+  av.classList.toggle('has-img', Boolean(draft.avatar));
+  av.textContent = draft.avatar ? '' : ([...name][0] || 'M').toUpperCase();
+  $('#pfAvatarClear').hidden = !draft.avatar;
+  $('#pfBannerClear').hidden = !draft.banner;
+  $$('.swatch', $('#pfColors')).forEach((b) => b.setAttribute('aria-checked', b.dataset.color === c));
+}
+
+function openProfile() {
+  const p = Store.data.profile;
+  draft = { avatar: IMG_OK.test(p.avatar) ? p.avatar : '', banner: IMG_OK.test(p.banner) ? p.banner : '', color: CHANNELS.me.color };
+  $('#pfName').value = p.name || '';
+  $('#pfHandle').value = p.handle || '';
+  $('#pfAbout').value = p.about || '';
+  $('#pfNameCount').textContent = $('#pfName').value.length;
+  $('#pfName').placeholder = ME_DEFAULT.name;
+  $('#pfColors').innerHTML = PROFILE_COLORS.map((c) =>
+    `<button type="button" class="swatch" role="radio" data-color="${c}" style="--sw:${c}" aria-label="Cor ${c}" aria-checked="false"></button>`).join('');
+  $('#pfAvatarFile').value = '';
+  $('#pfBannerFile').value = '';
+  profileError('');
+  paintProfileDraft();
+  $('#profileDialog').showModal();
+}
+
+async function pickImage(input, field, w, h, q) {
+  const file = input.files[0];
+  input.value = '';
+  if (!file) return;
+  profileError('');
+  try {
+    draft[field] = await resizeImage(file, w, h, q);
+    paintProfileDraft();
+  } catch (err) { profileError(err.message); }
+}
+$('#pfAvatarFile').addEventListener('change', (e) => pickImage(e.target, 'avatar', 256, 256, 0.85));
+$('#pfBannerFile').addEventListener('change', (e) => pickImage(e.target, 'banner', 1200, 300, 0.8));
+$('#pfAvatarClear').addEventListener('click', () => { draft.avatar = ''; paintProfileDraft(); });
+$('#pfBannerClear').addEventListener('click', () => { draft.banner = ''; paintProfileDraft(); });
+$('#pfColors').addEventListener('click', (e) => {
+  const b = e.target.closest('.swatch');
+  if (b) { draft.color = b.dataset.color; paintProfileDraft(); }
+});
+$('#pfName').addEventListener('input', (e) => { $('#pfNameCount').textContent = e.target.value.length; paintProfileDraft(); });
+$('#pfHandle').addEventListener('blur', (e) => { e.target.value = cleanHandle(e.target.value); });
+$('#pfReset').addEventListener('click', () => {
+  draft = { avatar: ME_DEFAULT.avatar, banner: ME_DEFAULT.banner, color: ME_DEFAULT.color };
+  $('#pfName').value = ME_DEFAULT.name; $('#pfHandle').value = ME_DEFAULT.handle; $('#pfAbout').value = ME_DEFAULT.about;
+  $('#pfNameCount').textContent = String(ME_DEFAULT.name.length);
+  paintProfileDraft();
+});
+
+$('#profileForm').addEventListener('submit', (e) => {
+  const name = $('#pfName').value.trim();
+  if (!name) { e.preventDefault(); return profileError('Dê um nome ao seu canal.'); }
+  Store.data.profile = {
+    name,
+    handle: cleanHandle($('#pfHandle').value),
+    about: $('#pfAbout').value.trim(),
+    color: draft.color,
+    avatar: draft.avatar,
+    banner: draft.banner
+  };
+  Store.save();
+  applyProfile();
+  renderChannelList();
+  toast('Canal atualizado');
+  rerender();
+  if (watchingId) refreshWatchPart('comments');
 });
 
 /* ----- Enviar vídeo ----- */
@@ -1260,6 +1413,7 @@ function iniciar() {
     if (!ok) return mostrarServidorForaDoAr();
     document.body.classList.toggle('sidebar-mini', Store.data.sidebarMini);
     applyTheme();
+    applyProfile();
     renderChannelList();
     renderNotifBadge();
     route();

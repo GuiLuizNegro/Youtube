@@ -1065,3 +1065,148 @@ kbd {
 .swatch[aria-checked="true"] { border-color: var(--text); }
 .swatch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 @media (max-width: 700px) { .profile-edit__banner { height: 84px; } }
+
+
+/* ============ 12. Shorts ============ */
+body.is-shorts { overflow: hidden; }
+body.is-shorts #app { height: calc(100dvh - var(--topbar-h)); min-height: 0; overflow: hidden; }
+
+.shorts { position: relative; height: 100%; display: flex; overflow: hidden; }
+.shorts__main { position: relative; flex: 1; min-width: 0; }
+.shorts__feed {
+  height: 100%; overflow-y: scroll;
+  scroll-snap-type: y mandatory; overscroll-behavior: contain;
+  scrollbar-width: none; outline: none;
+  overflow-anchor: none;   /* a rolagem é acertada à mão em shTrim() */
+}
+.shorts__feed::-webkit-scrollbar { display: none; }
+
+/* Um Short = uma tela inteira: vídeo vertical + botões ao lado */
+.short {
+  height: 100%; box-sizing: border-box; padding: 12px 0;
+  scroll-snap-align: center; scroll-snap-stop: always;
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+}
+.short__stage {
+  position: relative; isolation: isolate; overflow: hidden;
+  height: 100%; max-width: calc(100% - 96px); aspect-ratio: 9 / 16;
+  border-radius: 16px; background: #000; color: #fff;
+}
+.short__img, .short__video, .short__bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.short__img { object-fit: cover; transform: scale(1.04); user-select: none; }
+.short.is-active:not(.is-paused) .short__img { animation: short-drift 22s ease-in-out infinite alternate; }
+@keyframes short-drift {
+  from { transform: scale(1.04) translate(0, 0); }
+  to { transform: scale(1.16) translate(-2%, -1.5%); }
+}
+/* Vídeo enviado: cabe inteiro, com a miniatura desfocada atrás */
+.short__bg { background-size: cover; background-position: center; filter: blur(28px) brightness(.55); transform: scale(1.2); }
+.short__video { object-fit: contain; }
+
+.short__shade {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(to top, rgba(0, 0, 0, .78) 0%, rgba(0, 0, 0, 0) 46%),
+    linear-gradient(to bottom, rgba(0, 0, 0, .38) 0%, rgba(0, 0, 0, 0) 16%);
+}
+.short__tag {
+  position: absolute; top: 14px; left: 14px; z-index: 3;
+  padding: 3px 9px; border-radius: 4px;
+  background: rgba(0, 0, 0, .55); font-size: 11px; font-weight: 600; letter-spacing: .02em;
+}
+.short__mute {
+  position: absolute; top: 12px; right: 12px; z-index: 3;
+  width: 40px; height: 40px; border: none; border-radius: 50%;
+  background: rgba(0, 0, 0, .45); color: #fff; display: grid; place-items: center;
+}
+.short__mute:hover { background: rgba(0, 0, 0, .65); }
+.short__mute svg { width: 20px; height: 20px; }
+
+.short__tap { position: absolute; inset: 0 0 16px 0; z-index: 1; border: none; background: none; cursor: pointer; }
+.short__pause-ind {
+  position: absolute; left: 50%; top: 50%; z-index: 2; display: none;
+  width: 68px; height: 68px; transform: translate(-50%, -50%);
+  border-radius: 50%; background: rgba(0, 0, 0, .55); place-items: center; pointer-events: none;
+}
+.short__pause-ind svg { width: 30px; height: 30px; }
+.short.is-paused .short__pause-ind { display: grid; }
+
+/* Canal, botão de inscrever-se, título e hashtags */
+.short__info { position: absolute; left: 16px; right: 16px; bottom: 26px; z-index: 2; pointer-events: none; text-shadow: 0 1px 3px rgba(0, 0, 0, .55); }
+.short__info a, .short__info button { pointer-events: auto; }
+.short__who { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.short__channel { display: flex; align-items: center; gap: 8px; min-width: 0; font-weight: 700; font-size: 15px; }
+.short__channel .avatar { width: 32px; height: 32px; flex-basis: 32px; font-size: 13px; }
+.short__channel span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.short__channel:hover span:last-child { text-decoration: underline; }
+.short__follow { flex: 0 0 auto; white-space: nowrap; height: 32px; padding: 0 14px; font-size: 13px; background: #fff; color: #0B0E14; text-shadow: none; }
+.short__follow.is-following { background: rgba(255, 255, 255, .22); color: #fff; }
+.short__title {
+  margin: 0; font-family: var(--font-display); font-size: 17px; line-height: 1.3; font-weight: 600;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.short__tags { margin: 6px 0 0; font-size: 13px; opacity: .9; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Barra de progresso (dá para arrastar) */
+.short__bar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; height: 16px; display: flex; align-items: flex-end; cursor: pointer; touch-action: none; }
+.short__track { display: block; width: 100%; height: 3px; background: rgba(255, 255, 255, .3); transition: height .12s; }
+.short__bar:hover .short__track { height: 6px; }
+.short__track i { display: block; height: 100%; background: var(--yt-red, #FF0033); transform-origin: left; transform: scaleX(0); }
+
+/* Botões ao lado do vídeo */
+.short__rail { align-self: flex-end; margin-bottom: 12px; width: 64px; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.short__act { display: flex; flex-direction: column; align-items: center; gap: 6px; border: none; background: none; color: var(--text); font-size: 12px; text-align: center; }
+.short__act b { font-weight: 600; max-width: 72px; }
+.short__act .ico { width: 52px; height: 52px; border-radius: 50%; background: var(--surface-2); display: grid; place-items: center; transition: background .15s, transform .1s; }
+.short__act:hover .ico { background: var(--surface-3); }
+.short__act:active .ico { transform: scale(.92); }
+.short__act svg { width: 24px; height: 24px; }
+.short__act[aria-pressed="true"] .ico { color: var(--accent); }
+.short__act[aria-pressed="true"] svg { fill: currentColor; fill-opacity: .22; }
+
+/* Setas para trocar de Short (computador) */
+.shorts__arrows { position: absolute; right: 20px; top: 50%; z-index: 5; transform: translateY(-50%); display: flex; flex-direction: column; gap: 12px; }
+.shorts__arrows .icon-btn { width: 48px; height: 48px; flex-basis: 48px; background: var(--surface-2); }
+.shorts__arrows .icon-btn:hover:not(:disabled) { background: var(--surface-3); }
+.shorts__arrows .icon-btn:disabled { opacity: .35; cursor: default; }
+
+/* Comentários: painel ao lado (computador) */
+.shorts__panel { flex: 0 0 0; width: 0; overflow: hidden; background: var(--surface); border-left: 1px solid var(--surface-2); transition: flex-basis .25s ease, width .25s ease; }
+.shorts.has-comments .shorts__panel { flex-basis: 400px; width: 400px; }
+.spanel { width: 400px; height: 100%; display: flex; flex-direction: column; }
+.spanel__head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 10px 20px; border-bottom: 1px solid var(--surface-2); }
+.spanel__head h2 { margin: 0; font-family: var(--font-display); font-size: 18px; }
+.spanel__list { flex: 1; overflow-y: auto; padding: 18px 20px; display: flex; flex-direction: column; gap: 20px; overscroll-behavior: contain; }
+.spanel__empty { margin: 24px 0; text-align: center; }
+.spanel__form { display: flex; align-items: center; gap: 10px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)) 20px; border-top: 1px solid var(--surface-2); }
+.spanel__form input { flex: 1; min-width: 0; height: 40px; padding: 0 14px; border: none; border-radius: 20px; background: var(--surface-2); color: var(--text); }
+.spanel__form input:focus { outline: 2px solid var(--accent); }
+.spanel__form .pill-btn { height: 36px; padding: 0 14px; }
+
+@media (max-width: 1000px) {
+  .shorts.has-comments .shorts__panel { flex-basis: 340px; width: 340px; }
+  .spanel { width: 340px; }
+}
+
+/* Celular: o Short ocupa a tela toda, botões sobre o vídeo e comentários em gaveta */
+@media (max-width: 700px) {
+  body.is-shorts #app { height: calc(100dvh - var(--topbar-h) - 60px - env(safe-area-inset-bottom, 0px)); }
+  .shorts__arrows { display: none; }
+  .short { position: relative; display: block; padding: 0; }
+  .short__stage { width: 100%; max-width: none; height: 100%; aspect-ratio: auto; border-radius: 0; }
+  .short__rail { position: absolute; right: 4px; bottom: 96px; z-index: 4; margin: 0; gap: 14px; width: 74px; }
+  .short__act b { font-size: 11px; max-width: 74px; }
+  .short__act { color: #fff; text-shadow: 0 1px 3px rgba(0, 0, 0, .6); }
+  .short__act .ico { width: 46px; height: 46px; background: rgba(0, 0, 0, .38); }
+  .short__act:hover .ico { background: rgba(0, 0, 0, .55); }
+  .short__act[aria-pressed="true"] .ico { color: var(--brand); }
+  .short__info { right: 86px; bottom: 22px; }
+  .shorts__panel {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 20;
+    width: auto; flex-basis: auto; height: 68%;
+    border-left: none; border-radius: 16px 16px 0 0; box-shadow: var(--shadow);
+    transform: translateY(105%); transition: transform .25s ease;
+  }
+  .shorts.has-comments .shorts__panel { width: auto; flex-basis: auto; transform: none; }
+  .spanel { width: auto; }
+}

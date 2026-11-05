@@ -25,6 +25,8 @@ O QUE FUNCIONA
     tela final com o proximo video
   - Curtir, seguir, salvar, comentar, compartilhar link (inclusive em um tempo do video)
   - Busca com sugestoes, filtros e pesquisa por voz (Chrome/Edge)
+  - Perfil padrao do canal: "Leonam Games" (banner e foto em img/profile/, editaveis em "Personalizar canal")
+  - Personalizar canal: nome, @identificador, sobre, cor, foto e banner (menu da conta ou pagina "Seu canal"); fica salvo no servidor
   - Tema claro/escuro, notificacoes, versao para celular, atalhos de teclado (tecla ?)
 
 ONDE FICAM OS DADOS (BACK-END)

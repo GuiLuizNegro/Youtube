@@ -151,7 +151,7 @@ function videoCard(v, { showChannel = true, deletable = false } = {}) {
         ${showChannel ? avatar(v.ch) : ''}
         <div class="card__text">
           <h3 class="card__title"><a href="#/v/${v.id}">${esc(v.title)}</a></h3>
-          ${showChannel ? `<a href="#/c/${v.ch}" class="card__meta card__channel">${esc(c.name)}</a>` : ''}
+          ${showChannel ? `<a href="#/c/${v.ch}" class="card__meta card__channel">${esc(c.name)}${verified(v.ch)}</a>` : ''}
           <span class="card__meta">${fmtViews(viewsOf(v))} · ${ago(v.publishedAt)}</span>
         </div>
         <div class="card__actions">
@@ -180,10 +180,13 @@ function rowItem(v, { rank, action } = {}) {
     </article>`;
 }
 
+const VERIFIED = '<span class="verified" title="Verificado" aria-label="Verificado"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.5 14.5-4-4 1.4-1.4 2.6 2.6 5.6-5.6 1.4 1.4z"/></svg></span>';
+const verified = (key) => (key !== 'me' && CHANNELS[key] && CHANNELS[key].followers >= 100000 ? VERIFIED : '');
+
 function followButton(key) {
   if (key === 'me') return '';
   const on = Store.has('following', key);
-  return `<button class="follow-btn ${on ? 'is-following' : ''}" data-follow="${key}" aria-pressed="${on}">${on ? 'Seguindo' : 'Seguir'}</button>`;
+  return `<button class="follow-btn ${on ? 'is-following' : ''}" data-follow="${key}" aria-pressed="${on}">${on ? 'Inscrito' : 'Inscrever-se'}</button>`;
 }
 
 function emptyState({ icon = ICON.empty, title, text, action = '' }) {
@@ -248,7 +251,7 @@ function renderTrending() {
 }
 
 function renderFollowing() {
-  document.title = 'Seguindo — VoceTube';
+  document.title = 'Inscrições — VoceTube';
   const keys = Store.data.following;
   if (!keys.length) {
     const suggestions = Object.keys(CHANNELS).filter((k) => k !== 'me');
@@ -263,7 +266,7 @@ function renderFollowing() {
   const list = allVideos().filter((v) => keys.includes(v.ch)).sort((a, b) => b.publishedAt - a.publishedAt);
   app().innerHTML = `
     <div class="page">
-      ${pageHead('Seguindo')}
+      ${pageHead('Inscrições')}
       <div class="following-row">
         ${keys.map((k) => `
           <a href="#/c/${k}" class="following-row__item">
@@ -283,7 +286,7 @@ function channelRow(key) {
       ${avatar(key, 'avatar--xl')}
       <div class="channel-row__text">
         <a href="#/c/${key}"><strong>${esc(c.name)}</strong></a>
-        <span class="muted small">${c.handle} · ${fmtCount(followersOf(key))} seguidores · ${channelVideos(key).length} vídeos</span>
+        <span class="muted small">${c.handle} · ${fmtCount(followersOf(key))} inscritos · ${channelVideos(key).length} vídeos</span>
         <span class="muted small channel-row__about">${esc(c.about)}</span>
       </div>
       ${followButton(key)}
@@ -410,8 +413,8 @@ function renderChannel(key) {
       <div class="channel-head">
         <span class="avatar avatar--huge" style="background:${c.color}" aria-hidden="true">${c.ini}</span>
         <div class="channel-head__text">
-          <h1>${esc(c.name)}</h1>
-          <p class="muted">${c.handle} · ${fmtCount(followersOf(key))} seguidores · ${list.length} ${list.length === 1 ? 'vídeo' : 'vídeos'}</p>
+          <h1>${esc(c.name)}${verified(key)}</h1>
+          <p class="muted">${c.handle} · ${fmtCount(followersOf(key))} inscritos · ${list.length} ${list.length === 1 ? 'vídeo' : 'vídeos'}</p>
           <p class="muted channel-head__about">${esc(c.about)}</p>
           <div class="channel-head__actions">
             ${mine ? `<button class="pill-btn pill-btn--accent" data-open="upload">${ICON.upload}Enviar vídeo</button>` : followButton(key)}
@@ -428,7 +431,7 @@ function renderChannel(key) {
           <p>${esc(c.about)}</p>
           <dl class="about-stats">
             <dt>Entrou</dt><dd>${c.joined}</dd>
-            <dt>Seguidores</dt><dd>${followersOf(key).toLocaleString('pt-BR')}</dd>
+            <dt>Inscritos</dt><dd>${followersOf(key).toLocaleString('pt-BR')}</dd>
             <dt>Visualizações</dt><dd>${totalViews.toLocaleString('pt-BR')}</dd>
             <dt>Vídeos</dt><dd>${list.length}</dd>
           </dl>
@@ -520,7 +523,7 @@ function relatedHTML(v) {
           ${thumb(r)}
           <div class="related-item__text">
             <span class="related-item__title">${esc(r.title)}</span>
-            <span class="card__meta">${esc(CHANNELS[r.ch].name)}</span>
+            <span class="card__meta">${esc(CHANNELS[r.ch].name)}${verified(r.ch)}</span>
             <span class="card__meta">${fmtCount(viewsOf(r))} · ${ago(r.publishedAt)}</span>
           </div>
         </a>`).join('') : '<p class="muted">Nenhum outro vídeo aqui.</p>'}
@@ -561,8 +564,8 @@ async function renderWatch(id, params) {
           <div class="channel">
             ${avatar(v.ch, 'avatar--lg')}
             <div class="channel__info">
-              <a href="#/c/${v.ch}" class="channel__name">${esc(c.name)}</a>
-              <span class="muted small" data-followers>${fmtCount(followersOf(v.ch))} seguidores</span>
+              <a href="#/c/${v.ch}" class="channel__name">${esc(c.name)}${verified(v.ch)}</a>
+              <span class="muted small" data-followers>${fmtCount(followersOf(v.ch))} inscritos</span>
             </div>
             ${followButton(v.ch)}
           </div>
@@ -572,6 +575,7 @@ async function renderWatch(id, params) {
           <strong>${viewsOf(v).toLocaleString('pt-BR')} visualizações · ${ago(v.publishedAt)} · <a href="#/" data-goto-cat="${v.cat}" class="tag">#${esc(v.cat)}</a></strong>
           <p class="description__text">${linkTimestamps(esc(v.desc || 'Sem descrição.'))}</p>
           <button class="description__toggle" id="descToggle" aria-expanded="false">mais</button>
+          ${chaptersHTML(v)}
         </div>
         <section class="comments" id="comments" aria-label="Comentários">${commentsHTML(v)}</section>
       </div>
@@ -609,6 +613,13 @@ async function renderWatch(id, params) {
     nextVideo: next,
     onNext: () => { if (next) location.hash = `#/v/${next.id}`; },
     onTheater: toggleTheater,
+    theater: Store.data.theater,
+    onChapters: () => {
+      const box = $('#description');
+      box.classList.add('is-open');
+      $('#descToggle').textContent = 'mostrar menos';
+      $('#chapters')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
     onTime: (t, d) => {
       if (d && !v.dur) v.dur = d;
       if (Date.now() - lastSave > 4000) { lastSave = Date.now(); Store.setPosition(id, t); }
@@ -617,6 +628,22 @@ async function renderWatch(id, params) {
   });
   player.objectUrl = v.src;
   player.play(); // começa a tocar sozinho (o navegador pode bloquear vídeos com som)
+}
+
+/* Lista de capítulos (lidos da descrição) abaixo do texto, como no YouTube */
+function chaptersHTML(v) {
+  const list = parseChapters(v.desc, v.dur);
+  if (!list.length) return '';
+  return `
+    <div class="chapters" id="chapters">
+      <h3>Capítulos</h3>
+      <div class="chapters__list">${list.map((c) => `
+        <button class="chapter-card" data-seek="${c.start}">
+          ${v.thumb ? `<img src="${esc(v.thumb)}" alt="" loading="lazy">` : '<span class="chapter-card__ph"></span>'}
+          <div><strong>${esc(c.title)}</strong><span>${fmtTime(c.start)}</span></div>
+        </button>`).join('')}
+      </div>
+    </div>`;
 }
 
 /* Transforma "01:40" na descrição em link que pula para aquele tempo */
@@ -629,6 +656,7 @@ function toggleTheater() {
   Store.data.theater = !Store.data.theater;
   Store.save();
   $('.watch')?.classList.toggle('is-theater', Store.data.theater);
+  player?.setTheater?.(Store.data.theater);
 }
 
 function destroyPlayer() {
@@ -649,7 +677,7 @@ function refreshWatchPart(part) {
   if (part === 'related') $('#related').innerHTML = relatedHTML(v);
   if (part === 'follow') {
     $('.watch [data-follow]').outerHTML = followButton(v.ch);
-    $('[data-followers]').textContent = `${fmtCount(followersOf(v.ch))} seguidores`;
+    $('[data-followers]').textContent = `${fmtCount(followersOf(v.ch))} inscritos`;
   }
 }
 
@@ -727,7 +755,7 @@ document.addEventListener('click', async (e) => {
   }
   if (d.follow) {
     const added = Store.toggle('following', d.follow);
-    toast(added ? `Você agora segue ${CHANNELS[d.follow].name}` : `Você deixou de seguir ${CHANNELS[d.follow].name}`);
+    toast(added ? `Inscrição feita em ${CHANNELS[d.follow].name}` : `Inscrição cancelada em ${CHANNELS[d.follow].name}`);
     renderChannelList();
     return watchingId ? refreshWatchPart('follow') : rerender();
   }
@@ -1210,6 +1238,9 @@ document.addEventListener('keydown', (e) => {
   else if (key === 'm') player.toggleMute();
   else if (key === 'f') player.fullscreen();
   else if (key === 't') toggleTheater();
+  else if (key === 'i') player.miniplayer();
+  else if (e.key === '>') player.stepSpeed(1);
+  else if (e.key === '<') player.stepSpeed(-1);
   else if (e.key === 'N' && e.shiftKey) { const n = relatedFor(getVideo(watchingId))[0]; if (n) location.hash = `#/v/${n.id}`; }
   else if (/^[0-9]$/.test(e.key)) player.seek((Number(e.key) / 10) * player.duration);
 });

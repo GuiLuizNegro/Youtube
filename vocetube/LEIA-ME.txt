@@ -72,3 +72,8 @@ Shorts (#/shorts)
   - Shorts de exemplo em js/shorts-data.js (fotos em img/shorts/, creditos em img/shorts/CREDITOS.txt)
   - Videos enviados com ate 60 s tambem aparecem nos Shorts e tocam de verdade
   - Atalhos nos Shorts: setas cima/baixo trocam de Short, Espaco ou K pausa, M liga/desliga o som (videos enviados)
+
+Shorts: limitacoes conhecidas
+  - Os Shorts de exemplo sao fotos com movimento leve, sem som
+  - Curtidas de Shorts nao aparecem na pagina Curtidos
+  - Duracao maxima de 60 segundos

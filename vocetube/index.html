@@ -97,6 +97,9 @@
       <a href="#/" class="nav-item" data-route="home">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg><span>Início</span>
       </a>
+      <a href="#/shorts" class="nav-item" data-route="shorts">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="4"/><path d="M10.5 9.5v5l4-2.5z"/></svg><span>Shorts</span>
+      </a>
       <a href="#/alta" class="nav-item" data-route="alta">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3s5 4.5 5 10a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5 0 2 1 3 2 3 0-3-1-5 1-8.5z"/></svg><span>Em alta</span>
       </a>
@@ -131,7 +134,7 @@
   <!-- ===== Barra inferior (celular) ===== -->
   <nav class="bottom-nav" aria-label="Navegação rápida">
     <a href="#/" data-route="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Início</a>
-    <a href="#/alta" data-route="alta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3s5 4.5 5 10a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5 0 2 1 3 2 3 0-3-1-5 1-8.5z"/></svg>Em alta</a>
+    <a href="#/shorts" data-route="shorts"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="4"/><path d="M10.5 9.5v5l4-2.5z"/></svg>Shorts</a>
     <button data-open="upload" class="bottom-nav__add" aria-label="Enviar vídeo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
     <a href="#/seguindo" data-route="seguindo"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M7 4h10M10 11v5l4-2.5z"/></svg>Inscrições</a>
     <a href="#/historico" data-route="historico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg>Você</a>
@@ -279,6 +282,7 @@
         <dt><kbd>Shift</kbd> + <kbd>.</kbd> / <kbd>,</kbd></dt><dd>Aumentar / diminuir velocidade</dd>
         <dt><kbd>Shift</kbd> + <kbd>N</kbd></dt><dd>Próximo vídeo</dd>
         <dt><kbd>0</kbd> a <kbd>9</kbd></dt><dd>Pular para 0% a 90% do vídeo</dd>
+        <dt><kbd>↑</kbd> / <kbd>↓</kbd></dt><dd>Short anterior / próximo (na página Shorts)</dd>
         <dt><kbd>/</kbd></dt><dd>Ir para a busca</dd>
         <dt><kbd>?</kbd></dt><dd>Mostrar esta lista</dd>
       </dl>
@@ -305,5 +309,7 @@
   <script src="js/storage.js"></script>
   <script src="js/player.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/shorts-data.js"></script>
+  <script src="js/shorts.js"></script>
 </body>
 </html>

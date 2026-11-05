@@ -698,18 +698,21 @@ function parseRoute() {
 function route() {
   if (!VideoApi.online) return;   // ainda sem dados do servidor
   destroyPlayer();
+  destroyShorts();
   watchingId = null;
   const { parts, params } = parseRoute();
   const [page, arg] = parts;
   const isWatch = page === 'v';
 
   document.body.classList.toggle('is-watch', isWatch);
+  document.body.classList.toggle('is-shorts', page === 'shorts');
   closeDrawer();
   closePopovers();
 
   let active = 'home';
   if (!page) renderHome();
   else if (page === 'alta') { active = 'alta'; renderTrending(); }
+  else if (page === 'shorts') { active = 'shorts'; renderShorts(arg); }
   else if (page === 'seguindo') { active = 'seguindo'; renderFollowing(); }
   else if (page === 'historico') { active = 'historico'; renderHistory(); }
   else if (page === 'depois') { active = 'depois'; renderSaved(); }
@@ -732,7 +735,7 @@ function route() {
 /* Redesenha a página atual sem mudar de endereço */
 function rerender() {
   const { parts } = parseRoute();
-  if (parts[0] === 'v') return; // a página do vídeo é atualizada por partes
+  if (parts[0] === 'v' || parts[0] === 'shorts') return; // vídeo e Shorts são atualizados por partes
   const y = window.scrollY;
   route();
   window.scrollTo(0, y);

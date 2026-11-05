@@ -26,7 +26,8 @@ const DEFAULT_DATA = {
   muted: false,
   speed: 1,
   sidebarMini: false,
-  notifSeenAt: 0
+  notifSeenAt: 0,
+  profile: { name: '', handle: '', about: '', color: '', avatar: '', banner: '' }   // perfil de "Meu canal" (vazio = padrão)
 };
 
 const Store = {
@@ -34,7 +35,8 @@ const Store = {
 
   /* Recebe o estado do servidor e a lista de vídeos enviados */
   hydrate(estado, uploads) {
-    this.data = { ...structuredClone(DEFAULT_DATA), ...estado, uploads: uploads || [] };
+    const base = structuredClone(DEFAULT_DATA);
+    this.data = { ...base, ...estado, profile: { ...base.profile, ...(estado && estado.profile) }, uploads: uploads || [] };
   },
 
   /* Pede para gravar no servidor (daqui a instantes, juntando vários pedidos seguidos) */

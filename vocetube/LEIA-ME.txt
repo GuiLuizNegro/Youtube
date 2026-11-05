@@ -20,7 +20,9 @@ ESTRUTURA
 O QUE FUNCIONA
   - Paginas: Inicio, Em alta, Seguindo, Historico, Ver depois, Curtidos, Canal, Busca e Video
   - Enviar video do computador: o arquivo e enviado ao servidor e toca de verdade (da para avancar e voltar)
-  - Player: velocidade, volume, modo cinema, tela cheia, proximo video automatico
+  - Player estilo YouTube: capitulos na barra (lidos da descricao), previa ao passar o mouse,
+    menu com velocidade/qualidade/repetir/modo ambiente, miniplayer, modo cinema, tela cheia,
+    tela final com o proximo video
   - Curtir, seguir, salvar, comentar, compartilhar link (inclusive em um tempo do video)
   - Busca com sugestoes, filtros e pesquisa por voz (Chrome/Edge)
   - Tema claro/escuro, notificacoes, versao para celular, atalhos de teclado (tecla ?)
@@ -36,7 +38,8 @@ ONDE FICAM OS DADOS (BACK-END)
 
 LIMITACOES
   - Nao ha contas: quem acessar o servidor ve e altera os mesmos dados.
-  - Os videos de exemplo sao demonstracoes com nomes aleatorios (sem imagem real); so os enviados tocam de verdade
+  - Os videos de exemplo sao demonstracoes (mostram a miniatura); so os enviados tocam de verdade
+  - Miniaturas: fotos do Wikimedia Commons, creditos em img/thumbs/CREDITOS.txt
   - Limite de 2 GB por video enviado
 
 TROCAR A COR PRINCIPAL
